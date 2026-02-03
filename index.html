@@ -23,24 +23,41 @@ th{background:#2196F3;color:white}
 <script>
 const ESP_IP = "192.168.1.8"; // GANTI kalau IP berubah
 
-fetch(`http://${ESP_IP}/api/status`)
-.then(r=>r.json())
-.then(d=>{
- document.getElementById("status").innerHTML =
-  "WiFi: "+d.wifi+" | SD: "+d.sd+" | IP: "+d.ip;
-});
+function loadStatus() {
+  fetch(`http://${ESP_IP}/api/status`)
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById("status").innerHTML =
+      "WiFi: "+d.wifi+" | SD: "+d.sd+" | IP: "+d.ip;
+  });
+}
 
-fetch(`http://${ESP_IP}/api/absensi`)
-.then(r=>r.json())
-.then(data=>{
- let t = document.getElementById("tabel");
- data.forEach(row=>{
-  let tr = document.createElement("tr");
-  tr.innerHTML = `<td>${row.nama}</td><td>${row.divisi}</td><td>${row.status}</td><td>${row.waktu}</td>`;
-  t.appendChild(tr);
- });
-});
+function loadAbsensi() {
+  fetch(`http://${ESP_IP}/api/absensi`)
+  .then(r=>r.json())
+  .then(data=>{
+    let t = document.getElementById("tabel");
+
+    // reset tabel dulu (biar tidak dobel)
+    t.innerHTML = "<tr><th>Nama</th><th>Divisi</th><th>Status</th><th>Waktu</th></tr>";
+
+    data.forEach(row=>{
+      let tr = document.createElement("tr");
+      tr.innerHTML = `<td>${row.nama}</td><td>${row.divisi}</td><td>${row.status}</td><td>${row.waktu}</td>`;
+      t.appendChild(tr);
+    });
+  });
+}
+
+// Load pertama kali saat halaman dibuka
+loadStatus();
+loadAbsensi();
+
+// Auto refresh tiap 5 detik
+setInterval(loadStatus, 5000);
+setInterval(loadAbsensi, 5000);
 </script>
+
 
 </body>
 </html>
