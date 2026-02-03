@@ -21,10 +21,10 @@ th{background:#2196F3;color:white}
 </table>
 
 <script>
-const ESP_IP = "http://192.168.1.8";
+const ESP_IP = "http://192.168.1.8"; // WAJIB pakai http lengkap
 
 function loadStatus() {
-  fetch(`http://${ESP_IP}/api/status`)
+  fetch(`${ESP_IP}/api/status`)
   .then(r=>r.json())
   .then(d=>{
     document.getElementById("status").innerHTML =
@@ -33,12 +33,10 @@ function loadStatus() {
 }
 
 function loadAbsensi() {
-  fetch(`http://${ESP_IP}/api/absensi`)
+  fetch(`${ESP_IP}/api/absensi`)
   .then(r=>r.json())
   .then(data=>{
     let t = document.getElementById("tabel");
-
-    // reset tabel dulu (biar tidak dobel)
     t.innerHTML = "<tr><th>Nama</th><th>Divisi</th><th>Status</th><th>Waktu</th></tr>";
 
     data.forEach(row=>{
@@ -49,14 +47,12 @@ function loadAbsensi() {
   });
 }
 
-// Load pertama kali saat halaman dibuka
 loadStatus();
 loadAbsensi();
-
-// Auto refresh tiap 5 detik
 setInterval(loadStatus, 5000);
 setInterval(loadAbsensi, 5000);
 </script>
+
 
 
 </body>
